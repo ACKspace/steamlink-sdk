@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if [ ! -f extracted.txt ]; then
+    touch extracted.txt
+    ./extract
+fi
+./nx

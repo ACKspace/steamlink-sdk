@@ -1,0 +1,75 @@
+diff --git a/src/graphics/graphics.cpp b/src/graphics/graphics.cpp
+index df536c1..5755bcd 100644
+--- a/src/graphics/graphics.cpp
++++ b/src/graphics/graphics.cpp
+@@ -49,7 +49,7 @@ bool Graphics::init(int resolution)
+     screen_bpp = 16; // the default
+   }
+ 
+-  if (SetResolution(resolution, false))
++  if (SetResolution(7, false))
+     return 1;
+ 
+   if (Tileset::Init())
+@@ -84,7 +84,7 @@ bool Graphics::InitVideo()
+   if (screen)
+     delete screen;
+ 
+-  uint32_t window_flags = SDL_WINDOW_SHOWN;
++  uint32_t window_flags = SDL_WINDOW_FULLSCREEN_DESKTOP;
+ 
+   const Graphics::gres_t *res = GetRes();
+ 
+@@ -261,6 +261,7 @@ const Graphics::gres_t *Graphics::GetRes()
+          {(char *)"1600x1200", 1600, 1200, 320, 240, 5, false, true},
+          // widescreen
+          {(char *)"480x272", 480, 272, 480, 272, 1, true, true},
++         {(char *)"1280x720", 1280, 720, 427, 240, 3, true, true},
+          {(char *)"1360x768", 1360, 768, 454, 256, 3, true, true},
+          {(char *)"1366x768", 1366, 768, 455, 256, 3, true, true},
+          {(char *)"1440x900", 1440, 900, 480, 300, 3, true, true},
+diff --git a/src/pause/options.cpp b/src/pause/options.cpp
+index 972bfd3..6c06808 100644
+--- a/src/pause/options.cpp
++++ b/src/pause/options.cpp
+@@ -168,7 +168,6 @@ static void EnterMainMenu()
+ 
+   dlg->Clear();
+ 
+-  dlg->AddItem("Graphics", EnterGraphicsMenu);
+   dlg->AddItem("Sound", EnterSoundMenu);
+   dlg->AddItem("Controls", EnterControlsMenu);
+ 
+@@ -406,10 +405,10 @@ void _music_get(ODItem *item)
+ void _tracks_change(ODItem *item, int dir)
+ {
+   int result = settings->new_music + dir;
+-  if (result < 0)
++  if (result < 1)
+     result = 2;
+   if (result > 2)
+-    result = 0;
++    result = 1;
+   NXE::Sound::SoundManager::getInstance()->setNewmusic(result);
+   NXE::Sound::SoundManager::getInstance()->playSfx(NXE::Sound::SFX::SND_MENU_SELECT);
+ }
+diff --git a/src/settings.cpp b/src/settings.cpp
+index 211ff1d..8156bab 100644
+--- a/src/settings.cpp
++++ b/src/settings.cpp
+@@ -75,13 +75,13 @@ bool settings_load(Settings *setfile)
+     stat("No saved settings; using defaults.");
+ 
+     memset(setfile, 0, sizeof(Settings));
+-    setfile->resolution     = 2; // 640x480 Windowed, should be safe value
++    setfile->resolution     = 7; // 1280*720 Windowed, should be safe value
+     setfile->last_save_slot = 0;
+     setfile->fullscreen     = false;
+ 
+     setfile->sound_enabled = true;
+     setfile->music_enabled = 1; // both Boss and Regular music
+-    setfile->new_music     = 0;
++    setfile->new_music     = 1;
+     setfile->rumble        = false;
+     setfile->sfx_volume = 100;
+     setfile->music_volume = 100;
