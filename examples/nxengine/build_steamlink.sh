@@ -59,8 +59,14 @@ mkdir -p "${APPSDIR}"
 (cd "${APPSDIR}"; rm -rf CaveStory; unzip ${BUILD}/cavestoryen.zip)
 cp -rv "${SRC}/bin/." "${DESTDIR}/" || exit 1
 cp -rv "${SRC}/data/." "${DESTDIR}/data/" || exit 1
-cp -rv "${BUILD}/music/new/." "${DESTDIR}/data/Ogg/" || exit 1
-cp -rv "${BUILD}/music/remastered" "${DESTDIR}/data/Ogg11" || exit 1
+if [ -d ${BUILD}/music ]; then
+	if [ -d ${BUILD}/music/new ]; then
+		cp -rv "${BUILD}/music/new/." "${DESTDIR}/data/Ogg/" || exit 1
+	fi
+	if [ -d ${BUILD}/music/remastered ]; then
+		cp -rv "${BUILD}/music/remastered" "${DESTDIR}/data/Ogg11" || exit 1
+	fi
+fi
 cp -v "${BUILD}/run_cavestory" "${DESTDIR}/" || exit 1
 
 # Create the table of contents and icon
